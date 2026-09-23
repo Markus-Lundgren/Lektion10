@@ -86,8 +86,10 @@ class Program
 		int index = 1;
 		foreach (Contact p in list)
 		{
-			Console.WriteLine($"{index++}. Namn: {p.Name} Telefonnummer: {p.FormatPhoneNumber(p.ValidatePhoneNumber(p.Phone_Number))} Id: {p.Id}");
+			//Console.WriteLine($"{index++}. Namn: {p.Name} Telefonnummer: {p.FormatPhoneNumber(p.ValidatePhoneNumber(p.Phone_Number))} Id: {p.Id}");
+			Console.WriteLine(p);
 		}
+
 		Console.WriteLine();
 	}
 
@@ -105,7 +107,7 @@ class Program
 				if (update)
 				{
 					c.Name = MInput.GetInput("Skriv in det nya nammnet: ");
-					Console.WriteLine($"{c.GetPerson()}");
+					Console.WriteLine($"{c.GetPerson()} Uppdaterad: {c.UpdatedAt}");
 				}
 				return;
 			}
@@ -117,16 +119,44 @@ class Program
 class Entity
 {
 	public int Id { get; }
-	public DateTime
+	public DateTime CreatedAt;
+	public DateTime UpdatedAt { get; private set; }
 	public Entity()
 	{
 		Id = Random.Shared.Next(1, 1000000);
+		CreatedAt = DateTime.Now;
 	}
+	public void SetUpdatedAt(DateTime date)
+	{
+		UpdatedAt = date;
+	}
+
+	public override string ToString() => $"Id: {Id}, Skapad: {CreatedAt}, Uppdaterad: {UpdatedAt}";
 }
 class Contact : Entity
 {
-	public string Name { get; set; }
-	public string Phone_Number { get; set; }
+	public string Name
+	{
+		get
+		{
+			return field;
+		}
+		set
+		{
+			SetUpdatedAt(DateTime.Now);
+			field = value;
+		}
+	}
+	public string Phone_Number
+	{
+		get => field;
+		set
+		{
+			SetUpdatedAt(DateTime.Now);
+			field = value;
+		}
+	}
+
 	public string GetPerson()
 	{
 		return Name + " - " + Phone_Number;
@@ -150,7 +180,6 @@ class Contact : Entity
 
 	public string FormatPhoneNumber(string num) => num.Insert(8, " ").Insert(6, " ").Insert(3, " - ");
 
-
 	public string ReverseName()
 	{
 		string name = string.Empty;
@@ -160,4 +189,6 @@ class Contact : Entity
 		}
 		return name;
 	}
+
+	public override string ToString() => $"Id: {Id}, Namn: {Name}, Telefonnummer: {Phone_Number}, Skapad: {CreatedAt}, Uppdaterad: {UpdatedAt}";
 }
