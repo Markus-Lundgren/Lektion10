@@ -117,7 +117,7 @@ class Program
 class Entity
 {
 	public int Id { get; }
-
+	public DateTime
 	public Entity()
 	{
 		Id = Random.Shared.Next(1, 1000000);
